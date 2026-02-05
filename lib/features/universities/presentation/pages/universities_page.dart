@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend_test/features/universities/domain/entities/university.dart';
+import 'package:frontend_test/shared/utils/responsive.dart';
 import 'package:go_router/go_router.dart';
 import 'package:frontend_test/features/universities/presentation/bloc/universities_bloc.dart';
 import 'package:frontend_test/injection_container.dart';
@@ -65,8 +66,16 @@ class UniversitiesPage extends StatelessWidget {
                   onNotification: (notification) =>
                       _onScrollNotification(notification, context),
                   child: state.viewType == ViewType.list
-                      ? _buildListView(state.universities, state.hasMore)
-                      : _buildGridView(state.universities, state.hasMore),
+                      ? _buildListView(
+                          context,
+                          state.universities,
+                          state.hasMore,
+                        )
+                      : _buildGridView(
+                          context,
+                          state.universities,
+                          state.hasMore,
+                        ),
                 );
               },
             );
@@ -76,7 +85,12 @@ class UniversitiesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildListView(List<University> universities, bool hasMore) {
+  Widget _buildListView(
+    BuildContext context,
+    List<University> universities,
+    bool hasMore,
+  ) {
+    final Responsive responsive = Responsive.of(context);
     return ListView.builder(
       key: Key('list_view'),
       itemCount: universities.length + (hasMore ? 1 : 0),
@@ -98,19 +112,19 @@ class UniversitiesPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${university.name} $index',
-                    style: const TextStyle(
+                    university.name ?? '',
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: responsive.fp(30),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   if (university.studentCount != null)
                     Text(
                       'Estudiantes: ${university.studentCount}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white70,
-                        fontSize: 12,
+                        fontSize: responsive.fp(30),
                       ),
                     ),
                 ],
@@ -118,7 +132,10 @@ class UniversitiesPage extends StatelessWidget {
             ),
           ),
           onTap: () async {
-            final result = await context.pushNamed('university-detail', extra: university);
+            final result = await context.pushNamed(
+              'university-detail',
+              extra: university,
+            );
             if (result != null && result is Map<String, dynamic>) {
               // Actualizar la universidad con los nuevos datos
               context.read<UniversitiesBloc>().add(
@@ -136,7 +153,12 @@ class UniversitiesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildGridView(List<University> universities, bool hasMore) {
+  Widget _buildGridView(
+    BuildContext context,
+    List<University> universities,
+    bool hasMore,
+  ) {
+    final Responsive responsive = Responsive.of(context);
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -154,7 +176,10 @@ class UniversitiesPage extends StatelessWidget {
         final university = universities[index];
         return GestureDetector(
           onTap: () async {
-            final result = await context.pushNamed('university-detail', extra: university);
+            final result = await context.pushNamed(
+              'university-detail',
+              extra: university,
+            );
             if (result != null && result is Map<String, dynamic>) {
               // Actualizar la universidad con los nuevos datos
               context.read<UniversitiesBloc>().add(
@@ -196,7 +221,7 @@ class UniversitiesPage extends StatelessWidget {
                         color: Colors.white70,
                       ),
                     ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: responsive.dp(8)),
                   Expanded(
                     flex: 2,
                     child: Column(
@@ -207,18 +232,18 @@ class UniversitiesPage extends StatelessWidget {
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 14,
+                          style: TextStyle(
+                            fontSize: responsive.fp(30),
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
                         if (university.studentCount != null) ...[
-                          const SizedBox(height: 4),
+                          SizedBox(height: responsive.dp(4)),
                           Text(
                             'Estudiantes: ${university.studentCount}',
-                            style: const TextStyle(
-                              fontSize: 11,
+                            style: TextStyle(
+                              fontSize: responsive.fp(30),
                               color: Colors.white70,
                             ),
                           ),
