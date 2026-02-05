@@ -46,27 +46,6 @@ flutter pub run build_runner build --delete-conflicting-outputs
 ```bash
 flutter run
 ```
-
-## Estructura del Proyecto
-
-```
-lib/
-├── core/                  # Funcionalidades base y compartidas
-│   ├── api/              # Configuración de API
-│   ├── either/           # Manejo de resultados
-│   ├── environment/      # Variables de entorno
-│   ├── failure/          # Manejo de errores
-│   ├── http/             # Cliente HTTP
-│   └── router/           # Configuración de rutas
-├── features/             # Características de la aplicación
-│   ├── home/            # Página de inicio
-│   └── universities/    # Feature de universidades
-│       ├── data/        # Fuentes de datos y repositorios
-│       ├── domain/      # Entidades y contratos
-│       └── presentation/# UI y BLoC
-└── shared/              # Utilidades compartidas
-```
-
 ## Testing
 
 Ejecuta los tests con:
@@ -94,7 +73,3 @@ O para desarrollo continuo:
 ```bash
 flutter pub run build_runner watch
 ```
-
-## Notas
-
-Los archivos generados (*.freezed.dart, *.g.dart, *.mocks.dart) están excluidos del control de versiones. Asegúrate de ejecutar `build_runner` después de clonar el repositorio.
